@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Cliente\StoreRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -37,15 +38,8 @@ class ClienteController extends Controller
             ], 200);
     }
 
-    public function addCliente(Request $request)
+    public function addCliente(StoreRequest $request)
     {
-        $validatedData = $request->validate([
-            'nome' => ['required'],
-            'email' => ['required', 'email', 'unique:clientes'],
-        ]);
-
-        dd($validatedData);
-   
         $cliente = DB::table('clientes')->insert([
             'nome' => $request->nome,
             'email' => $request->email,
@@ -56,7 +50,7 @@ class ClienteController extends Controller
                 'status' => 'success',
                 'message' => 'Cliente adicionado com sucesso',
                 'data' => $cliente
-            ], 200
+            ], 201
         );        
     }
 }
