@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
     Route::get('/clientes', [ClienteController::class, 'index']);
     Route::post('/cliente', [ClienteController::class, 'client']);
     Route::post('/add-cliente', [ClienteController::class, 'addCliente']);
+    Route::put('/update-cliente', [ClienteController::class, 'updateCliente']);
     Route::post('/add-lancamento', [LancamentoController::class, 'addLancamento']);
-    Route::post('/rules', [ClienteController::class, 'rules']);
+    Route::put('/update-lancamento', [LancamentoController::class, 'updateLancamento']);
 

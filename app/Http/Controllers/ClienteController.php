@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Cliente\StoreRequest;
+use App\Models\Cliente;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -52,5 +54,31 @@ class ClienteController extends Controller
                 'data' => $cliente
             ], 201
         );        
+    }
+
+    public function updateCliente(Request $request)
+    {
+        if(!$request->id){
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'Id do cliente é obrigatório'
+                ],
+                400
+            );
+        }
+
+        $cliente = Cliente::find($request->id);
+        $cliente->nome = $request->nome;
+        $cliente->email = $request->email;
+        $cliente->save();
+
+        return response()->json(
+            [
+                'status' => 'success',
+                'message' => 'Cliente atualizado com sucesso',
+                'data' => $cliente
+            ], 201
+        );    
     }
 }
