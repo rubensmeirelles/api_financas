@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ApiResponse;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -22,15 +23,25 @@ class AuthController extends Controller
         ]);
 
         if(!$attempt){
-            return response()->json([
-                'error' => 'Não autorizado.'
-            ], 401);
+            return ApiResponse::unauthorized();
         }
 
         $user = auth()->user();
         $token = $user->createToken($user->nome)->plainTextToken;
 
-        return response()->json(['token' => $token]);
+        return ApiResponse::success(
+            [
+                'user' => $user->nome,
+                'email' => $user->email,
+                'perfil' => $user->perfil,
+                'token' => $token,
+            ], "Login efetuado com sucesso."
+        );
+    }
 
+    public function logout(Request $request)
+    {
+        $request->user()->tokens()->delete();
+        return ApiResponse::success('','Logout realizado com sucesso.');
     }
 }

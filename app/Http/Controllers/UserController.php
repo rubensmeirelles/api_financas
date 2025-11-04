@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Cliente\StoreRequest as ClienteStoreRequest;
-use App\Http\Requests\User\StoreRequest;
+use App\Http\Requests\UserRequest;
 use App\Models\User;
+use App\Services\ApiResponse;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,73 +13,44 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = DB::table('users')->get();
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Clientes obtidos com sucesso',
-            'data' => $users
-        ], 200);
-    }
-
-    public function client(Request $request)
-    {
-        if(!$request->id){
-            return response()->json([
-            'status' => 'error',
-            'message' => 'Id do cliente é obrigatório'
-            ], 400);
-        } 
-
-        $user = DB::table('users')
-        ->find($request->id);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Cliente obtido com sucesso',
-            'data' => $user
-            ], 200);
-    }
-
-    public function addCliente(Request $request)
-    {
-        $user = DB::table('users')->insert([
-            'nome' => $request->nome,
-            'email' => $request->email,
-        ]);
-
-        return response()->json(
+        $users = DB::table('users')->get(
             [
-                'status' => 'success',
-                'message' => 'Cliente adicionado com sucesso',
-                'data' => $user
-            ], 201
-        );        
+                'id', 'nome', 'email', 'perfil'
+            ]
+        );
+
+        return ApiResponse::success($users, 'Lista de usuários obtida com sucesso.');
     }
 
-    public function updateCliente(Request $request)
+    public function show($id)
     {
-        if(!$request->id){
-            return response()->json(
-                [
-                    'status' => 'error',
-                    'message' => 'Id do cliente é obrigatório'
-                ],
-                400
-            );
-        }
+        $user = User::find($id);
 
-        $cliente = User::find($request->id);
-        $cliente->nome = $request->nome;
-        $cliente->email = $request->email;
-        $cliente->save();
+        if (!$user) {
+        return ApiResponse::error('Usuário não encontrado.');
+    }
 
-        return response()->json(
-            [
-                'status' => 'success',
-                'message' => 'Cliente atualizado com sucesso',
-                'data' => $cliente
-            ], 201
-        );    
+        return ApiResponse::success($user, 'Usuário obtido com sucesso.');
+    }
+
+    public function store(UserRequest $request)
+    {
+        //dd($request->all());
+        $user = User::create($request->validated());
+
+        return ApiResponse::created($user, 'Registo adicionado com sucesso.');
+    }
+
+    public function update(UserRequest $request, $id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+        return ApiResponse::error('Usuário não encontrado.', 404);
+    }
+
+        $user->update($request->validated());
+
+        return ApiResponse::success($user, 'Usuário atualizado com sucesso.');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lancamento;
+use App\Services\ApiResponse;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
@@ -19,11 +20,13 @@ class LancamentoController extends Controller
             ->orderBy("lancamentos.id", 'desc')
             ->get();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Lançamentos obtidos com sucesso',
-            'data' => $lancamentos
-        ], 200);
+        // return response()->json([
+        //     'status' => 'success',
+        //     'message' => 'Lançamentos obtidos com sucesso',
+        //     'data' => $lancamentos
+        // ], 200);
+
+        return ApiResponse::success($lancamentos, 'Lançamentos obtidos com sucesso!');
         
     }
 
@@ -38,48 +41,35 @@ class LancamentoController extends Controller
             'data_vencimento' => $request->data_vencimento,
             'data_pagamento' => $request->data_pagamento,
             'conta_id' => $request->conta_id,
-            'user_id' => $request->cliente_id,
+            'user_id' => $request->user_id,
             'created_at' => Carbon::now()
         ]);
 
-        return response()->json(
-            [
-                'status' => 'success',
-                'message' => 'Lançamento cadastrado com sucesso',
-                'data' => $lancamento
-            ], 201);      
+        return ApiResponse::success($lancamento, 'Lançamento cadastrado com sucesso');      
     }
 
     public function updateLancamento(Request $request)
     {
+        //dd($request->all());
         if(!$request->id){
-            return response()->json(
-                [
-                    'status' => 'error',
-                    'message' => 'Id do lançamento é obrigatório'
-                ],
-                400
-            );
+            return ApiResponse::error('Lançamento não encontado.');
         }
 
         $lancamento = Lancamento::find($request->id);
 
         $lancamento->descricao_lancamento = $request->descricao_lancamento;
         $lancamento->tipo_lancamento = $request->tipo_lancamento;
-        $lancamento->conta_id = $request->conta_id;
+        $lancamento->status_lancamento = $request->status_lancamento;
         $lancamento->valor_lancamento = $request->valor_lancamento;
         $lancamento->data_vencimento = $request->data_vencimento;
-        $lancamento->cliente_id = $request->cliente_id;
-
+        $lancamento->data_pagamento = $request->data_pagamento;
+        $lancamento->conta_id = $request->conta_id;        
+        $lancamento->data_vencimento = $request->data_vencimento;
+        $lancamento->user_id = $request->user_id;
+        $lancamento->pessoa_id = $request->pessoa_id;
+        $lancamento->updated_at = Carbon::now();
         $lancamento->save();
 
-        return response()->json(
-            [
-                'status' => 'success',
-                'message' => 'Lançamento atualizado com sucesso',
-                'data' => $lancamento
-            ], 201
-        );    
-
+        return ApiResponse::success($lancamento, 'Lançamento atualizado com sucesso');
     }
 }
