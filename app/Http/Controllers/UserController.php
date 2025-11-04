@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Cliente\StoreRequest;
-use App\Models\Cliente;
+use App\Http\Requests\Cliente\StoreRequest as ClienteStoreRequest;
+use App\Http\Requests\User\StoreRequest;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class ClienteController extends Controller
+class UserController extends Controller
 {
     public function index()
     {
-        $clientes = DB::table('clientes')->get();
+        $users = DB::table('users')->get();
 
         return response()->json([
             'status' => 'success',
             'message' => 'Clientes obtidos com sucesso',
-            'data' => $clientes
+            'data' => $users
         ], 200);
     }
 
@@ -30,19 +31,19 @@ class ClienteController extends Controller
             ], 400);
         } 
 
-        $cliente = DB::table('clientes')
+        $user = DB::table('users')
         ->find($request->id);
 
         return response()->json([
             'status' => 'success',
             'message' => 'Cliente obtido com sucesso',
-            'data' => $cliente
+            'data' => $user
             ], 200);
     }
 
-    public function addCliente(StoreRequest $request)
+    public function addCliente(Request $request)
     {
-        $cliente = DB::table('clientes')->insert([
+        $user = DB::table('users')->insert([
             'nome' => $request->nome,
             'email' => $request->email,
         ]);
@@ -51,7 +52,7 @@ class ClienteController extends Controller
             [
                 'status' => 'success',
                 'message' => 'Cliente adicionado com sucesso',
-                'data' => $cliente
+                'data' => $user
             ], 201
         );        
     }
@@ -68,7 +69,7 @@ class ClienteController extends Controller
             );
         }
 
-        $cliente = Cliente::find($request->id);
+        $cliente = User::find($request->id);
         $cliente->nome = $request->nome;
         $cliente->email = $request->email;
         $cliente->save();

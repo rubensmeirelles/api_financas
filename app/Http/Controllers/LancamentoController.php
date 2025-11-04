@@ -14,8 +14,8 @@ class LancamentoController extends Controller
     {
         $lancamentos = DB::table('lancamentos')
             ->join('contas', 'lancamentos.conta_id', '=', 'contas.id')
-            ->join('clientes', 'lancamentos.cliente_id', '=', 'clientes.id')
-            ->select(['lancamentos.id', 'descricao_lancamento', 'tipo_lancamento', 'lancamentos.conta_id','conta', 'valor_lancamento', 'data_vencimento', 'lancamentos.cliente_id','nome'])
+            ->join('users', 'lancamentos.user_id', '=', 'users.id')
+            ->select(['lancamentos.id', 'descricao_lancamento', 'tipo_lancamento', 'lancamentos.conta_id','nome_conta', 'valor_lancamento', 'data_vencimento', 'lancamentos.user_id','nome'])
             ->orderBy("lancamentos.id", 'desc')
             ->get();
 
@@ -33,10 +33,12 @@ class LancamentoController extends Controller
         $lancamento = DB::table('lancamentos')-> insert([
             'descricao_lancamento' => $request->descricao_lancamento,
             'tipo_lancamento' => $request->tipo_lancamento,
-            'conta_id' => $request->conta_id,
+            'status_lancamento' => $request->status_lancamento,
             'valor_lancamento' => $request->valor_lancamento,
             'data_vencimento' => $request->data_vencimento,
-            'cliente_id' => $request->cliente_id,
+            'data_pagamento' => $request->data_pagamento,
+            'conta_id' => $request->conta_id,
+            'user_id' => $request->cliente_id,
             'created_at' => Carbon::now()
         ]);
 
