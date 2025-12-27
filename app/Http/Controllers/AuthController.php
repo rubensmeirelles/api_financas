@@ -31,6 +31,7 @@ class AuthController extends Controller
 
         return ApiResponse::success(
             [
+                'id' => $user->id,
                 'user' => $user->nome,
                 'email' => $user->email,
                 'perfil' => $user->perfil,

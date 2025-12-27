@@ -22,10 +22,7 @@ return new class extends Migration
             $table->string('categoria', 100)->nullable();
 
             // Relações
-            $table->foreignId('conta_id')
-                  ->constrained('contas')
-                  ->onDelete('cascade');
-
+           
             $table->foreignId('user_id')
                   ->constrained('users')
                   ->onDelete('cascade');
