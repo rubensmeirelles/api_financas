@@ -120,4 +120,25 @@ class LancamentoController extends Controller
 
         return ApiResponse::success($lancamento, 'Lançamento atualizado com sucesso');
     }
+
+    public function deleteLancamento($id)
+    {
+        $cliente_id = Auth::id();
+
+        if(!$id){
+            return ApiResponse::error('Lançamento não encontado.');
+        }
+
+        $lancamento = Lancamento::where('id', $id)
+        ->where('user_id', $cliente_id)
+        ->first();
+
+        if (!$lancamento) {
+            return ApiResponse::error('Lançamento não encontrado ou não pertence ao usuário.', 403);
+        }
+
+        $lancamento->delete();
+
+        return ApiResponse::success(null, 'Lançamento deletado com sucesso');
+    }
 }

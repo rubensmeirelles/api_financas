@@ -13,6 +13,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 Route::post('/add-lancamento', [LancamentoController::class, 'addLancamento']);
 Route::get('/lancamentos', [LancamentoController::class, 'index'])->middleware('auth:sanctum');
 Route::put('/update-lancamento', [LancamentoController::class, 'updateLancamento'])->middleware('auth:sanctum');
+Route::delete('/delete-lancamento/{id}', [LancamentoController::class, 'deleteLancamento'])->middleware('auth:sanctum');
 
 Route::get('/contas', [ContaController::class, 'index']);
 
