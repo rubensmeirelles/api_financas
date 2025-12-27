@@ -11,17 +11,22 @@ class Lancamento extends Model
 
     protected $fillable = [
         'descricao_lancamento',
+        'categoria_id',
         'tipo',
         'status',
         'valor_lancamento',
         'data_compra',
-        'data_vencimento',        
+        'data_vencimento',
+        'mes',
+        'mes_numero',
+        'ano',
         'conta_id',
-        'credit_card_id',
+        'cartao_id',
         'parcela_inicial',
         'parcela_total',
+        'a_receber',
         'user_id',
-        'pessoa_id'
+        'pessoa_id',
     ];
 
     public function conta()

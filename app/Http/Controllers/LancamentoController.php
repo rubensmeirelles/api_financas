@@ -56,6 +56,9 @@ class LancamentoController extends Controller
     public function addLancamento(Request $request)
     {
         //dd($request->all());
+        $cliente_id = Auth::id();
+        $carbon = Carbon::parse($request->data_vencimento);
+
         $lancamento = DB::table('lancamentos')-> insert([
             'descricao_lancamento' => $request->descricao_lancamento,
             'categoria_id' => $request->categoria_id,
@@ -64,15 +67,15 @@ class LancamentoController extends Controller
             'valor_lancamento' => $request->valor_lancamento,
             'data_compra' => $request->data_compra,
             'data_vencimento' => $request->data_vencimento,
-            'mes' => Carbon::parse($request->data_vencimento)->locale('pt-BR')->translatedFormat('M'),
-            'mes_numero' => Carbon::parse($request->data_vencimento)->month,
-            'ano' => Carbon::parse($request->data_vencimento)->year,
+            'mes' => $carbon->locale('pt_BR')->translatedFormat('M'),
+            'mes_numero' => $carbon->month,
+            'ano' => $carbon->year,
             'conta_id' => $request->conta_id,
             'cartao_id' => $request->cartao_id,
             'parcela_inicial' => $request->parcela_inicial,
             'parcela_total' => $request->parcela_total,
             'a_receber' => $request->a_receber,
-            'user_id' => $request->user_id,
+            'user_id' => $cliente_id,
             'pessoa_id' => $request->pessoa_id,
             'created_at' => Carbon::now()
         ])
