@@ -11,12 +11,15 @@ class Lancamento extends Model
 
     protected $fillable = [
         'descricao_lancamento',
-        'tipo_lancamento',
-        'status_lancamento',
+        'tipo',
+        'status',
         'valor_lancamento',
-        'data_vencimento',
-        'data_pagamento',
+        'data_compra',
+        'data_vencimento',        
         'conta_id',
+        'credit_card_id',
+        'parcela_inicial',
+        'parcela_total',
         'user_id',
         'pessoa_id'
     ];
@@ -24,6 +27,11 @@ class Lancamento extends Model
     public function conta()
     {
         return $this->belongsTo(Conta::class);
+    }
+
+    public function credit_card()
+    {
+        return $this->belongsTo(CreditCards::class);
     }
 
     public function user()

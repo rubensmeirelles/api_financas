@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class CreditCards extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'nome_cartao',
+        'user_id',
+        'limit',
+        'dia_fechamento',
+        'dia_vencimento',
+    ];
+}
